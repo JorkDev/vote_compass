@@ -1,0 +1,34 @@
+[
+  {
+    "id": "1",
+    "text": "El gobierno debería aumentar los impuestos a los ricos.",
+    "options": [
+      "Totalmente en desacuerdo",
+      "En desacuerdo",
+      "Neutral",
+      "De acuerdo",
+      "Totalmente de acuerdo"
+    ],
+    "dimension": [
+      "economic"
+    ],
+    "topic": "taxes",
+    "additional_info": "Evalúa la postura fiscal de los partidos."
+  },
+  {
+    "id": "2",
+    "text": "El gobierno debería tener mayor control sobre la seguridad interna.",
+    "options": [
+      "Totalmente en desacuerdo",
+      "En desacuerdo",
+      "Neutral",
+      "De acuerdo",
+      "Totalmente de acuerdo"
+    ],
+    "dimension": [
+      "civil_liberty"
+    ],
+    "topic": "security",
+    "additional_info": "Evalúa el nivel de intervención estatal en la seguridad."
+  }
+]

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Resultados - Brújula Electoral</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <h2>Tu Afinidad Política</h2>
+
+  <!-- Section to display match scores summary -->
+  <div id="match-scores" style="max-width: 600px; margin: 20px auto; text-align: left;">
+    <h3>Resultados de Afinidad:</h3>
+    <ul id="matchScoresList"></ul>
+  </div>
+
+  <!-- Container for both charts side-by-side -->
+  <div style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center;">
+    <div style="flex: 1; min-width: 300px;">
+      <h3>Bar Chart de Afinidad</h3>
+      <canvas id="barChart"></canvas>
+    </div>
+    <div style="flex: 1; min-width: 300px;">
+      <h3>Brújula Electoral</h3>
+      <canvas id="compassChart" width="600" height="600"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // Retrieve stored answers from localStorage
+    const storedAnswers = JSON.parse(localStorage.getItem('userAnswers') || "{}");
+    const topPartyNames = [];
+
+    // Fetch match scores and display summary; also store top 4 party names
+    fetch("/match", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answers: storedAnswers, weights: {} })
+    })
+      .then(res => res.json())
+      .then(data => {
+        const ul = document.getElementById("matchScoresList");
+        // Get top 4 matches (assuming data.matches is sorted descending)
+        const topMatches = data.matches.slice(0, 4);
+        topMatches.forEach(match => {
+          topPartyNames.push(match.party);
+          const li = document.createElement("li");
+          li.innerText = `${match.party}: ${match.score}%`;
+          ul.appendChild(li);
+        });
+
+        // Render the bar chart using only the top 4 matches
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+          type: 'bar',
+          data: {
+            labels: topMatches.map(m => m.party),
+            datasets: [{
+              label: 'Afinidad (%)',
+              data: topMatches.map(m => m.score),
+              backgroundColor: 'rgba(54, 162, 235, 0.6)'
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            scales: {
+              x: {
+                min: 0,
+                max: 100,
+                title: {
+                  display: true,
+                  text: 'Porcentaje de Afinidad'
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: 'Partidos'
+                }
+              }
+            }
+          }
+        });
+      });
+
+    // Fetch latent positions and filter for top 4 parties plus the user coordinate
+    fetch("/positions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answers: storedAnswers })
+    })
+      .then(res => res.json())
+      .then(data => {
+        // Filter: keep user coordinate (label "You") and parties in topPartyNames
+        const filteredData = data.filter(item => item.label === "You" || topPartyNames.includes(item.label));
+        const datasets = filteredData.map((item, idx) => ({
+          label: item.label,
+          data: [{ x: item.x, y: item.y }],
+          backgroundColor: item.label === "You" ? "black" : getRandomColor(),
+          pointRadius: 8
+        }));
+
+        const ctx = document.getElementById('compassChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'scatter',
+          data: { datasets: datasets },
+          options: {
+            scales: {
+              x: {
+                min: -3,
+                max: 3,
+                title: {
+                  display: true,
+                  text: 'Económico (Izquierda ← → Derecha)'
+                }
+              },
+              y: {
+                min: -3,
+                max: 3,
+                title: {
+                  display: true,
+                  text: 'Social (Libertario ← → Autoritario)'
+                }
+              }
+            },
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    return context.dataset.label + " (" +
+                      context.parsed.x.toFixed(1) + ", " +
+                      context.parsed.y.toFixed(1) + ")";
+                  }
+                }
+              }
+            }
+          }
+        });
+      });
+
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+  </script>
+</body>
+
+</html>

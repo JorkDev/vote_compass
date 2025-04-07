@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brújula Electoral - Encuentra tu Afinidad Política</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #fff;
+            color: #222;
+            padding-top: 80px;
+            /* Adjust based on navbar height */
+        }
+
+        /* Header */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            /* Adjusted padding */
+            border-bottom: 1px solid #ccc;
+        }
+
+        .branding {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .branding .text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            max-width: 50px;
+        }
+
+        .branding h1 {
+            color: #b10000;
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .branding p {
+            font-size: 0.8rem;
+            color: #555;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .nav-links li a.active,
+        .nav-links li a:hover {
+            color: #b10000;
+        }
+
+        /* Combined Intro Section (Hero + Scroll Down + Info Cards) */
+        .intro-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: stretch;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Hero */
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 40px 40px 0;
+            position: relative;
+        }
+
+        .hero-left {
+            flex: 1;
+            position: relative;
+            text-align: center;
+        }
+
+        .map-bg {
+            background: url('./app/static/peru.png') no-repeat center center;
+            background-size: contain;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 100%;
+            transform: translateX(-50%);
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .leader-img {
+            position: relative;
+            z-index: 1;
+            max-width: 450px;
+            visibility: hidden;
+            margin-bottom: 50px;
+        }
+
+        .leader-text {
+            margin-top: 20px;
+        }
+
+        .leader-text h2 {
+            font-size: 2rem;
+            color: #b10000;
+        }
+
+        .leader-text p {
+            margin-top: 5px;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .hero-right {
+            flex: 1;
+            padding: 20px 40px;
+        }
+
+        .hero-right h3 {
+            font-size: 1.7rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .hero-right .highlight {
+            color: #b10000;
+        }
+
+        .hero-right p {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .learn-more {
+            color: #b10000;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .learn-more span {
+            margin-left: 5px;
+        }
+
+        /* Scroll Down */
+        .scroll-down {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .scroll-down img {
+            margin-top: 5px;
+            width: 20px;
+        }
+
+        /* Info Cards */
+        .info-cards {
+            display: flex;
+            justify-content: space-around;
+            padding: 40px 20px;
+            background-color: #b10000;
+            color: white;
+            flex-wrap: wrap;
+            max-width: 950px;
+            margin: 0 auto;
+            border-radius: 10px;
+        }
+
+        .card {
+            text-align: center;
+            max-width: 280px;
+            margin: 10px;
+        }
+
+        .card img {
+            width: 50px;
+            margin-bottom: 15px;
+        }
+
+        .card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* About Us */
+        .about-us {
+            background-color: #ececec;
+            width: 100%;
+            padding: 60px 0;
+        }
+
+        .about-us-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            min-height: 100vh;
+            flex-wrap: wrap;
+            gap: 40px;
+            align-items: center;
+            text-align: center;
+            padding: 0 40px;
+        }
+
+        .about-image {
+            position: relative;
+            flex: 1;
+            min-width: 300px;
+            max-width: 480px;
+            height: 350px;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+            display: block;
+        }
+
+        .stat-card {
+            position: absolute;
+            background: white;
+            border-radius: 10px;
+            padding: 12px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 1rem;
+            color: #222;
+            font-weight: 500;
+            min-width: 160px;
+        }
+
+        .stat-card strong {
+            font-size: 1.2rem;
+            color: #222;
+            display: block;
+        }
+
+        .stat-card.members {
+            top: 25%;
+            left: 20px;
+        }
+
+        .stat-card.volunteers {
+            top: 60%;
+            left: 20px;
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+            text-align: left;
+        }
+
+        .about-text h5 {
+            color: #b10000;
+            text-transform: uppercase;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            border-bottom: 2px solid #b10000;
+            display: inline-block;
+            padding-bottom: 4px;
+        }
+
+        .about-text h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .about-text .highlight {
+            color: #b10000;
+        }
+
+        .about-text p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .about-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .learn-more-link {
+            color: #b10000;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .join-btn {
+            background-color: #b10000;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        /* Mission & Stands Section */
+        .mission-stands {
+            padding: 60px 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .mission-header h5 {
+            color: #b10000;
+            font-size: 1rem;
+            font-weight: 600;
+            border-bottom: 2px solid #b10000;
+            display: inline-block;
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+        }
+
+        .mission-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .mission-header p {
+            color: #444;
+            font-size: 0.95rem;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .mission-cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .mission-card {
+            background-color: #b10000;
+            color: white;
+            padding: 25px 20px;
+            border-radius: 12px;
+            width: 250px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .mission-card img {
+            width: 60px;
+            margin: 0 auto 15px;
+            display: block;
+        }
+
+        .mission-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .mission-card p {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .mission-card a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* FAQ Section */
+        .faq {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 60px 40px;
+            background-color: #ececec;
+            color: #333;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .faq h2 {
+            color: #b10000;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .faq details {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .faq details[open] {
+            background-color: #fff;
+        }
+
+        .faq summary {
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+            list-style: none;
+        }
+
+        .faq summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .faq p {
+            margin-top: 10px;
+            line-height: 1.6;
+            padding-left: 20px;
+        }
+
+        /* Connect Section */
+        .connect-section {
+            background: url('./app/static/pexels-fauxels-3184398.jpg') center center / cover no-repeat;
+            padding: 80px 20px;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .connect-section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-color: rgba(177, 0, 0, 0.356);
+            z-index: 0;
+        }
+
+        .connect-overlay {
+            position: relative;
+            z-index: 1;
+            background-color: white;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px;
+            flex-wrap: wrap;
+        }
+
+        .connect-box {
+            display: flex;
+            width: 100%;
+            gap: 30px;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .connect-content {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .connect-content h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .connect-content p {
+            font-size: 0.95rem;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .connect-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .connect-form input {
+            padding: 12px 15px;
+            width: 100%;
+            max-width: 350px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .connect-form button {
+            padding: 12px 25px;
+            background-color: #b10000;
+            color: white;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .connect-image {
+            flex: 0 0 auto;
+            max-width: 250px;
+            height: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .connect-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 8px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .social-icons img {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-nav {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .hero,
+            .about-us,
+            .mission-stands,
+            .connect-section {
+                padding: 40px 20px;
+            }
+
+            .mission-card,
+            .connect-image {
+                width: 100%;
+            }
+
+            .connect-overlay {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .connect-box {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top Navigation -->
+    <header class="top-nav">
+        <div class="branding">
+            <img src="./app/static/compass.png" alt="Brújula Electoral Logo" class="logo">
+            <div class="text">
+                <h1>Brújula Electoral</h1>
+                <p>¡Descubre dónde te posicionas en los temas políticos!</p>
+            </div>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#" class="active">Inicio</a></li>
+                <li><a href="#about">Acerca de</a></li>
+                <li><a href="#mission">Cómo Funciona</a></li>
+                <li><a href="#faq">Preguntas Frecuentes</a></li>
+                <li><a href="#connect">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Combined Intro Section (Hero + Scroll Down + Info Cards) -->
+    <section class="intro-section">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-left">
+                <div class="map-bg"></div>
+                <img src="" alt="Brújula Electoral" class="leader-img">
+                <div class="leader-text">
+                    <h2><span>BRÚJULA</span><br>ELECTORAL</h2>
+                    <p>— Tu Guía para la Afinidad Política</p>
+                </div>
+            </div>
+            <div class="hero-right">
+                <h3>
+                    Descubre Dónde Te<br>
+                    Posicionas en los <span class="highlight">Temas Clave</span><br>
+                    Y Toma Decisiones Informadas
+                </h3>
+                <p>
+                    Responde una serie de preguntas para ver cómo tus opiniones se alinean con los partidos y candidatos
+                    políticos.
+                </p>
+                <a href="#" class="learn-more">COMENZAR <span>→</span></a>
+            </div>
+        </div>
+
+        <!-- Scroll Down -->
+        <div class="scroll-down">
+            <p>Desplázate hacia abajo</p>
+            <img src="./app/static/scroll-bar.png" alt="icono de desplazamiento">
+        </div>
+
+        <!-- Info Cards -->
+        <div class="info-cards">
+            <div class="card">
+                <img src="./app/static/vote.png" alt="Preguntas">
+                <h4>Preguntas</h4>
+                <p>Responde un conjunto de preguntas cuidadosamente seleccionadas para determinar tu afinidad política.
+                </p>
+            </div>
+            <div class="card">
+                <img src="/app/static/handshake.png" alt="Partidos">
+                <h4>Partidos</h4>
+                <p>Compara tus opiniones con múltiples partidos, candidatos políticos y dimensiones.</p>
+            </div>
+            <div class="card">
+                <img src="/app/static/mission.png" alt="Resultados">
+                <h4>Resultados</h4>
+                <p>Obtén un desglose detallado de cómo tus opiniones se alinean con cada partido y candidatos.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-us" id="about">
+        <div class="about-us-container">
+            <div class="about-image">
+                <img src="https://portal.andina.pe/EDPfotografia3/Thumbnail/2020/01/26/000647998W.jpg"
+                    alt="Acerca de Brújula Electoral">
+                <div class="stat-card members">
+                    <strong>500,000 <span style="color: #b10000;">+</span></strong>
+                    <span>Usuarios Conscientes</span>
+                </div>
+                <div class="stat-card volunteers">
+                    <strong>50 <span style="color: #b10000;">+</span></strong>
+                    <span>Variantes Políticas</span>
+                </div>
+            </div>
+            <div class="about-text">
+                <h5>ACERCA DE NOSOTROS</h5>
+                <h2>
+                    "Tu Herramienta Para<br>
+                    <span class="highlight">Decisiones Informadas</span>"
+                </h2>
+                <p>
+                    Brújula Electoral es una plataforma diseñada para ayudarte a comprender mejor tus afinidades
+                    políticas.
+                    A través de un cuestionario interactivo, te mostramos cómo tus opiniones se alinean con los partidos
+                    y
+                    candidatos políticos.
+                </p>
+                <p>
+                    Nuestro objetivo es fomentar una participación informada en el proceso democrático, brindándote las
+                    herramientas necesarias para tomar decisiones basadas en tus valores y prioridades.
+                </p>
+                <div class="about-links">
+                    <a href="#" class="join-btn">Únete Ahora</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission and Stands Section -->
+    <section class="mission-stands" id="mission">
+        <div class="mission-header">
+            <h5>NUESTRA MISIÓN</h5>
+            <h2>"Facilitando Decisiones Informadas"</h2>
+            <p>
+                En Brújula Electoral, creemos que una democracia fuerte comienza con ciudadanos informados. Nuestra
+                misión es proporcionar una herramienta imparcial y accesible para que todos puedan explorar sus
+                afinidades políticas.
+            </p>
+        </div>
+        <div class="mission-cards">
+            <div class="mission-card">
+                <img src="./app/static/shrug.png" alt="Preguntas Clave">
+                <h4>Preguntas Clave</h4>
+                <p>Explora temas importantes y descubre cómo tus opiniones se alinean con las políticas actuales.</p>
+                <a href="#">SABER MÁS →</a>
+            </div>
+            <div class="mission-card">
+                <img src="./app/static/ab-testing.png" alt="Comparación">
+                <h4>Comparación</h4>
+                <p>Compara tus respuestas con las plataformas de los partidos y candidatos políticos.</p>
+                <a href="#">SABER MÁS →</a>
+            </div>
+            <div class="mission-card">
+                <img src="./app/static/analyzing.png" alt="Resultados Detallados">
+                <h4>Resultados Detallados</h4>
+                <p>Obtén un análisis completo de tus afinidades políticas y cómo se relacionan con los partidos.</p>
+                <a href="#">SABER MÁS →</a>
+            </div>
+            <div class="mission-card">
+                <img src="./app/static/vote (1).png" alt="Educación Cívica">
+                <h4>Educación Cívica</h4>
+                <p>Aprende más sobre el proceso democrático y la importancia de tu participación.</p>
+                <a href="#">SABER MÁS →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="faq-container">
+            <h2>Preguntas Frecuentes</h2>
+            <details>
+                <summary>¿Cómo funciona Brújula Electoral?</summary>
+                <p>
+                    Brújula Electoral te guía a través de un cuestionario interactivo para determinar tus afinidades
+                    políticas, comparándolas con diversas opciones en el espectro político.
+                </p>
+            </details>
+            <details>
+                <summary>¿Es gratuita la plataforma?</summary>
+                <p>
+                    Sí, la plataforma es completamente gratuita y está diseñada para fomentar una participación
+                    informada en el proceso democrático.
+                </p>
+            </details>
+            <details>
+                <summary>¿Cómo se comparan las respuestas?</summary>
+                <p>
+                    Tus respuestas se comparan con los perfiles de distintos partidos y candidatos para ofrecerte un
+                    análisis detallado de cómo se alinean con tus opiniones.
+                </p>
+            </details>
+            <details>
+                <summary>¿Qué tan precisos son los resultados?</summary>
+                <p>
+                    Los resultados se basan en la información proporcionada por los partidos y candidatos, así como en
+                    tus respuestas. Aunque no son definitivos, ofrecen una guía útil para explorar tus afinidades
+                    políticas.
+                </p>
+            </details>
+            <details>
+                <summary>¿Puedo cambiar mis respuestas después de completar el cuestionario?</summary>
+                <p>
+                    Sí, puedes volver a realizar el cuestionario en cualquier momento para actualizar tus respuestas y
+                    obtener nuevos resultados.
+                </p>
+            </details>
+        </div>
+    </section>
+
+    <!-- Connect Section -->
+    <section class="connect-section" id="connect">
+        <div class="connect-overlay">
+            <div class="connect-box">
+                <div class="connect-content">
+                    <h2>¡Conéctate con Nosotros!</h2>
+                    <p>
+                        Recibe notificaciones sobre nuestras actividades y participa en nuestros programas.<br />
+                        Es hora de tomar decisiones informadas para el futuro.
+                    </p>
+                    <form class="connect-form">
+                        <input type="text" placeholder="Correo Electrónico / Número de Teléfono*" required />
+                        <button type="submit">Verificar</button>
+                    </form>
+                    <div class="social-icons">
+                        <a href="#"><img src="./app/static/instagram.png" alt="Instagram"></a>
+                        <a href="#"><img src="./app/static/facebook.png" alt="Facebook"></a>
+                        <a href="#"><img src="./app/static/twitter.png" alt="Twitter"></a>
+                    </div>
+                </div>
+                <div class="connect-image">
+                    <img src="https://s.france24.com/media/display/22a6a82a-9ac3-11eb-beb6-005056bf87d6/w:1280/p:16x9/000_97R723.jpg"
+                        alt="Apoyo Público" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const sections = document.querySelectorAll("section");
+            const navLinks = document.querySelectorAll(".nav-links a");
+            const faqDetails = document.querySelectorAll(".faq details");
+
+            const setActiveLink = () => {
+                let currentSection = "";
+                sections.forEach((section) => {
+                    const sectionTop = section.offsetTop - 100; // Adjust for navbar height
+                    if (window.scrollY >= sectionTop) {
+                        currentSection = section.getAttribute("id");
+                    }
+                });
+
+                navLinks.forEach((link) => {
+                    link.classList.remove("active");
+                    if (link.getAttribute("href").substring(1) === currentSection) {
+                        link.classList.add("active");
+                    }
+                });
+            };
+
+            const closeOtherFaqs = (current) => {
+                faqDetails.forEach((detail) => {
+                    if (detail !== current) {
+                        detail.removeAttribute("open");
+                    }
+                });
+            };
+
+            faqDetails.forEach((detail) => {
+                detail.addEventListener("click", () => closeOtherFaqs(detail));
+            });
+
+            window.addEventListener("scroll", setActiveLink);
+        });
+    </script>
+</body>
+
+</html>

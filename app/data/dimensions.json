@@ -1,0 +1,18 @@
+[
+  {
+    "key": "economic",
+    "name": "Económico (Izquierda vs. Derecha)",
+    "axis": [
+      "Izquierda",
+      "Derecha"
+    ]
+  },
+  {
+    "key": "civil_liberty",
+    "name": "Social (Libertario vs. Autoritario)",
+    "axis": [
+      "Libertario",
+      "Autoritario"
+    ]
+  }
+]

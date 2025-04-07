@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Prueba Electoral - Brújula Electoral</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2 id="question-text"></h2>
+        <div class="options" id="options-container"></div>
+        <button id="next-btn" disabled>Next</button>
+        <footer>
+            <a href="#">Acerca de</a> • <a href="#">Ayuda</a> • <a href="#">Privacidad</a>
+        </footer>
+    </div>
+    <script>
+        let questions = [];
+        let currentQuestion = 0;
+        const userAnswers = {};
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const nextBtn = document.getElementById('next-btn');
+
+        function loadQuestion(index) {
+            const q = questions[index];
+            questionText.innerText = q.text;
+            optionsContainer.innerHTML = '';
+            nextBtn.disabled = true;
+
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.classList.add('option');
+                btn.dataset.value = i + 1; // Answers are 1–5
+                btn.innerText = opt;
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    userAnswers[q.id] = parseInt(btn.dataset.value);
+                    nextBtn.disabled = false;
+                });
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion(currentQuestion);
+            } else {
+                // Save user answers in localStorage and redirect to results page
+                localStorage.setItem('userAnswers', JSON.stringify(userAnswers));
+                window.location.href = "/results";
+            }
+        });
+
+        fetch("/questions")
+            .then(res => res.json())
+            .then(data => {
+                questions = data;
+                loadQuestion(currentQuestion);
+            });
+    </script>
+</body>
+
+</html>
