@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz</title>
+  <style>
+    /* Just some basic spacing so fields don’t overlap */
+    fieldset { margin-bottom: 1em; }
+  </style>
+</head>
+<body>
+  <h1>Quiz</h1>
+
+  <form id="quiz-form" action="/quiz" method="post">
+    <!-- Carry the email from the query‐string as a hidden field -->
+    <input type="hidden" name="email" value="{{ email }}" />
+
+    <!-- Loop over all the questions passed from your handler -->
+    {% for q in questions %}
+      <fieldset>
+        <legend>{{ q.text }}</legend>
+        {% for opt in q.options %}
+          <label>
+            <input
+              type="radio"
+              name="answer_{{ q.id }}"
+              value="{{ loop.index }}"
+              required
+            />
+            {{ opt }}
+          </label><br/>
+        {% endfor %}
+        <!-- Every question gets a “weight” of 1 by default -->
+        <input type="hidden" name="weight_{{ q.id }}" value="1" />
+      </fieldset>
+    {% endfor %}
+
+    <button type="submit">See My Results →</button>
+  </form>
+
+</body>
+</html>

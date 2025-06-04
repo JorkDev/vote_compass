@@ -1,19 +1,27 @@
-import uuid
+from typing import List, Dict
 from datetime import datetime
-from typing import Any, Dict
 from pydantic import BaseModel
+import uuid
 
-class ResultBase(BaseModel):
-    user_id: int
-    data: Dict[str, Any]
+class PartyScore(BaseModel):
+    party: str
+    score: float
 
-class ResultCreate(ResultBase):
-    pass
+class Coord(BaseModel):
+    label: str
+    x: float
+    y: float
 
-class ResultRead(ResultBase):
+class ResultData(BaseModel):
+    matches: List[PartyScore]
+    coords: List[Coord]
+
+class ResultRead(BaseModel):
     id: int
+    user_id: int
     token: uuid.UUID
     created_at: datetime
+    data: ResultData
 
     class Config:
         orm_mode = True

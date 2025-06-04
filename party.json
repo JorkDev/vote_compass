@@ -1,0 +1,15 @@
+{
+  "party_id": "party1",
+  "name": "Partido Uno",
+  "faction": "center",
+  "description": "Desc.",
+  "inscription_date": null,
+  "founder": null,
+  "current_leader": null,
+  "presidential_candidate": null,
+  "positions": {
+    "q1": { "value": 5, "source": "" },
+    "q2": { "value": 1, "source": "" }
+  }
+}
+

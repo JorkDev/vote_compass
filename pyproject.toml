@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "vote_compass"
+packages = [
+  { include = "app", from = "." }
+]
+version = "0.1.0"
+description = "A scalable Vote Compass API"
+authors = ["JorkDev <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.100.0"
+pydantic = "^2.2"
+uvicorn = { extras = ["standard"], version = "^0.23.0" }
+sqlalchemy = "^2.0"
+alembic = "^1.11"
+celery = "^5.2"
+redis = "^4.5"
+python-dotenv = "^1.0"
+pydantic-settings = "^2.9.1"
+email-validator = "^2.2.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.4"
+pytest-asyncio = "^0.21"
+black = "^23.12b0"
+isort = "^5.12.0"
+flake8 = "^6.1"
+mypy = "^1.4"
+
+[tool.poetry.group.dev.dependencies]
+httpx = "0.23.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
